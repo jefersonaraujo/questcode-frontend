@@ -1,7 +1,8 @@
+def LABEL_ID = "questcode-${UUID.randomUUID().toString()}"
 podTemplate(
     name: 'questcode',
     namespace: 'devops', 
-    label: 'questcode', 
+    label: 'LABEL_ID', 
     containers: [
             containerTemplate(alwaysPullImage: false, args: 'cat', command: '/bin/sh -c', envVars: [], image: 'docker', livenessProbe: containerLivenessProbe(execArgs: '', failureThreshold: 0, initialDelaySeconds: 0, periodSeconds: 0, successThreshold: 0, timeoutSeconds: 0), name: 'docker-container', ports: [], privileged: false, resourceLimitCpu: '', resourceLimitMemory: '', resourceRequestCpu: '', resourceRequestMemory: '', shell: null, ttyEnabled: true, workingDir: '/home/jenkins/agent'),
             containerTemplate(args: 'cat', command: '/bin/sh -c', image: 'lachlanevenson/k8s-helm:v2.11.0', name: 'helm-container', ttyEnabled: true)
@@ -10,20 +11,22 @@ podTemplate(
     ],
     volumes: [hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')],
 ) {
-    node('questcode') {
-        def REPOS
-        def IMAGE_VERSION ="0.1.4"
-        def IMAGE_POSFIX = ""
-        def KUBE_NAMESPACE
-        def IMAGE_NAME = "frontend"
-        def ENVIRONMENT 
-        def GIT_REPOS_URL = "https://github.com/jefersonaraujo/questcode-frontend.git"
-        def GIT_BRANCH 
-        def HELM_CHART_NAME = "questcode/frontend"
-        def HELM_DEPLOY_NAME  
-        def CHARTMUSEUM_URL = "http://helm-chartmuseum:8080"
-        def INGRESS_HOST = "questcode.org"
-        def NODE_PORT = "30080"
+
+    def REPOS
+    def IMAGE_VERSION ="0.1.4"
+    def IMAGE_POSFIX = ""
+    def KUBE_NAMESPACE
+    def IMAGE_NAME = "frontend"
+    def ENVIRONMENT 
+    def GIT_REPOS_URL = "https://github.com/jefersonaraujo/questcode-frontend.git"
+    def GIT_BRANCH 
+    def HELM_CHART_NAME = "questcode/frontend"
+    def HELM_DEPLOY_NAME  
+    def CHARTMUSEUM_URL = "http://helm-chartmuseum:8080"
+    def INGRESS_HOST = "questcode.org"
+    def NODE_PORT = "30080"
+    node('LABEL_ID') {
+
 
         stage('Checkout') {
             echo "Inicializando Clone do Repositorio"
@@ -62,6 +65,15 @@ podTemplate(
                
             }
         }
+    }
+    // timeout(time: 60, unit: 'SECONDS'){
+    //     //Ask User to continue
+    //     input message: 'Efetuar o Deploy em Homologação ?', ok: 'Sim'
+
+    //     }
+
+    node('LABEL_ID') {
+        
         stage('Deploy') {
             container('helm-container') {
                 echo "Inicializando Deploy com Helm"                
