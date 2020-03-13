@@ -15,7 +15,7 @@ podTemplate(
         def IMAGE_VERSION ="0.1.4"
         def IMAGE_POSFIX = ""
         def KUBE_NAMESPACE
-        def IMAGE_NAME = "questcode-frontend"
+        def IMAGE_NAME = "frontend"
         def ENVIRONMENT 
         def GIT_REPOS_URL = "https://github.com/jefersonaraujo/questcode-frontend.git"
         def GIT_BRANCH 
@@ -71,9 +71,9 @@ podTemplate(
                     helm repo update                    
                 """
                 try {
-                    sh "helm upgrade --namespace=${KUBE_NAMESPACE} ${HELM_DEPLOY_NAME} ${HELM_CHART_NAME}  "
+                    sh "helm upgrade --namespace=${KUBE_NAMESPACE} ${HELM_DEPLOY_NAME} ${HELM_CHART_NAME} --set image.tag=${IMAGE_VERSION} --set service.nodePort=${NODE_PORT} "
                 } catch(Exception e) {
-                    sh "helm install --namespace=${KUBE_NAMESPACE} --name ${HELM_DEPLOY_NAME} ${HELM_CHART_NAME}  "
+                    sh "helm install --namespace=${KUBE_NAMESPACE} --name ${HELM_DEPLOY_NAME} ${HELM_CHART_NAME} --set image.tag=${IMAGE_VERSION} --set service.nodePort=${NODE_PORT} "
                 }              
 
             }
