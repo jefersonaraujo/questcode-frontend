@@ -65,14 +65,7 @@ podTemplate(
                
             }
         }
-    }
-    // timeout(time: 60, unit: 'SECONDS'){
-    //     //Ask User to continue
-    //     input message: 'Efetuar o Deploy em Homologação ?', ok: 'Sim'
-
-    //     }
-
-    node('LABEL_ID') {
+  
         
         stage('Deploy') {
             container('helm-container') {
