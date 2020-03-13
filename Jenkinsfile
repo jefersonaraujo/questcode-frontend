@@ -15,7 +15,7 @@ podTemplate(
         def IMAGE_VERSION ="0.1.4"
         def IMAGE_POSFIX = ""
         def KUBE_NAMESPACE
-        def IMAGE_NAME = "questcode-frontend"
+        def IMAGE_NAME = "frontend"
         def ENVIRONMENT 
         def GIT_REPOS_URL = "https://github.com/jefersonaraujo/questcode-frontend.git"
         def GIT_BRANCH 
@@ -55,7 +55,7 @@ podTemplate(
                 echo "Inicializando empacotamento com Docker"
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_HUB_PASSWORD', usernameVariable: 'DOCKER_HUB_USER')]) {
                       sh "docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD}"
-                      sh "docker build -t ${DOCKER_HUB_USER}/${IMAGE_NAME}:${IMAGE_VERSION} . --build-arg NPM_ENV='${ENVIRONMENT}'"
+                      sh "docker build -t ${DOCKER_HUB_USER}/${IMAGE_NAME}:${IMAGE_VERSION} .  --build-arg NPM_ENV='${ENVIRONMENT}'"
                       sh "docker push ${DOCKER_HUB_USER}/${IMAGE_NAME}:${IMAGE_VERSION}"       
                 }
               
