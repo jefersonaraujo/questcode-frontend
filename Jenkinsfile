@@ -24,7 +24,7 @@ podTemplate(
     def HELM_DEPLOY_NAME  
     def CHARTMUSEUM_URL = "http://helm-chartmuseum:8080"
     def INGRESS_HOST = "questcode.org"
-    def NODE_PORT = "30080"
+  
     node('LABEL_ID') {
 
 
@@ -40,8 +40,7 @@ podTemplate(
             } else if (GIT_BRANCH.equals("origin/develop")) {
                 KUBE_NAMESPACE = "staging"
                 ENVIRONMENT = "staging"
-                IMAGE_POSFIX = "-RC"
-                NODE_PORT = "31080"
+                IMAGE_POSFIX = "-RC"                
                 INGRESS_HOST = "staging.questcode.org"
             } else {
                 def error = "Nao existe pipeline para a branch ${GIT_BRANCH}"
@@ -76,9 +75,9 @@ podTemplate(
                     helm repo update                    
                 """
                 try {
-                    sh "helm upgrade --namespace=${KUBE_NAMESPACE} ${HELM_DEPLOY_NAME} ${HELM_CHART_NAME} --set image.tag=${IMAGE_VERSION} --set service.nodePort=${NODE_PORT} "
+                    sh "helm upgrade --namespace=${KUBE_NAMESPACE} ${HELM_DEPLOY_NAME} ${HELM_CHART_NAME} --set image.tag=${IMAGE_VERSION} --set  ingress.hosts[0]=${INGRESS_HOST} "
                 } catch(Exception e) {
-                    sh "helm install --namespace=${KUBE_NAMESPACE} --name ${HELM_DEPLOY_NAME} ${HELM_CHART_NAME} --set image.tag=${IMAGE_VERSION} --set service.nodePort=${NODE_PORT} "
+                    sh "helm install --namespace=${KUBE_NAMESPACE} --name ${HELM_DEPLOY_NAME} ${HELM_CHART_NAME} --set image.tag=${IMAGE_VERSION} --set  ingress.hosts[0]=${INGRESS_HOST} "
                 }              
 
             }
