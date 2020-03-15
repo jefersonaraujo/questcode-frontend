@@ -71,9 +71,9 @@ podTemplate(
                     helm repo update                    
                 """
                 try {
-                    sh "helm upgrade --namespace=${KUBE_NAMESPACE} ${HELM_DEPLOY_NAME} ${HELM_CHART_NAME} --set image.tag=${IMAGE_VERSION}  --set ingress.hosts[0]=${INGRESS_HOST}" // --set service.nodePort=${NODE_PORT} "
+                    sh "helm upgrade --namespace=${KUBE_NAMESPACE} ${HELM_DEPLOY_NAME} ${HELM_CHART_NAME} --set image.tag=${IMAGE_VERSION}   --set service.nodePort=${NODE_PORT} " //--set ingress.hosts[0]=${INGRESS_HOST}
                 } catch(Exception e) {
-                    sh "helm install --namespace=${KUBE_NAMESPACE} --name ${HELM_DEPLOY_NAME} ${HELM_CHART_NAME} --set image.tag=${IMAGE_VERSION}  --set ingress.hosts[0]=${INGRESS_HOST}" //--set service.nodePort=${NODE_PORT} "
+                    sh "helm install --namespace=${KUBE_NAMESPACE} --name ${HELM_DEPLOY_NAME} ${HELM_CHART_NAME} --set image.tag=${IMAGE_VERSION} --set service.nodePort=${NODE_PORT} " // --set ingress.hosts[0]=${INGRESS_HOST} 
                 }              
 
             }
